@@ -5,14 +5,15 @@ from django import template
 from django.utils import timezone
 from keras.models import load_model
 import keras.backend as tf
-from fraud.models import Aadhar,Bank_formalities,Bank_details,bank_statement,predicted_features
+from fraud.models import Aadhar,Bank_formalities,Bank_details,bank_statement,predicted_features,report
 from django.shortcuts import render,get_object_or_404
-from fraud.forms import Authentic
+from fraud.forms import Authentic,Reporting
 from django.urls import reverse
 import numpy as np
 import os
 import random
 import pickle
+from shutil import copyfile
 
 
 from django.contrib.auth.decorators import login_required
@@ -20,6 +21,18 @@ from django.contrib.auth import authenticate,login,logout
 #from codefundo.models import user_details,gov_fund,track_users
 from datetime import datetime,date,timedelta
 path = os.path.join(os.getcwd(),'fraud')
+
+#madhuparna's code
+import argparse
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import torch.optim as optim
+from torchvision import datasets, transforms
+import numpy as np
+import torchvision
+import torchvision.transforms as transforms
+#madhuparna's code ends
 
 
 def index(request):
@@ -193,3 +206,94 @@ def generate_list(request):
 def generate_report(request,aadharno):
     predict = predicted_features.objects.filter(aadhar_no = aadharno)
     return render(request,"fraud/generate_report.html",{"predict":predict})
+
+
+def report_fraud(request):
+    form = Reporting()
+    if request.method == "POST":
+        print("manan")
+        form = Reporting(request.POST,request.FILES)
+        
+        if form.is_valid():
+            form.save()
+    return render(request,"fraud/report_fraud.html",{"form":form})
+
+
+def lets_see(request):
+    form = report.objects.all()[0]
+    print(form.image)
+    path = os.path.join(os.path.join(os.getcwd(),'temp'), 'temp')
+    print(path)
+    # copyfile(form.image, os.path.join(path, os.path.basename(form.image)))
+    print(os.path.join(os.getcwd(), 'media'))
+    monument = GetPlace('../media/holidays')
+    # os.remove( os.path.join(path, os.path.basename(form.image)))
+    # print(monument)
+
+
+# code begins
+def GetPlace(image_path):
+    
+    monuments = {0:'Burkingham Palace', 1:'Burj Khalifa',2:'Disney World',3:'Eiffel Tower',4:'Golden Gate Bridge',5:'Great Wall of China',6:'Pyramids',7:'Statue of Liberty',8:'Sydney Opera House',9:'Taj Mahal'}
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    data_transform = transforms.Compose([
+            transforms.RandomSizedCrop(64),
+            transforms.RandomHorizontalFlip(),
+            transforms.Grayscale(num_output_channels=1),
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                 std=[0.229, 0.224, 0.225])
+        ])
+    class ConvNet(nn.Module):
+        def __init__(self, num_classes=10):
+            super(ConvNet, self).__init__()
+            self.layer1 = nn.Sequential(
+                nn.Conv2d(1, 16, kernel_size=5, stride=1, padding=2),
+                nn.BatchNorm2d(16),
+                nn.ReLU(),
+                nn.MaxPool2d(kernel_size=2, stride=2))
+            self.layer2 = nn.Sequential(
+                nn.Conv2d(16, 32, kernel_size=5, stride=1, padding=2),
+                nn.BatchNorm2d(32),
+                nn.ReLU(),
+                nn.MaxPool2d(kernel_size=2, stride=2))
+            self.fc = nn.Linear(8192, num_classes)
+
+        def forward(self, x):
+            #print(x.shape)
+            out = self.layer1(x)
+            out = self.layer2(out)
+            out = out.reshape(out.size(0), -1)
+            out = self.fc(out)
+            return out
+    model = ConvNet(10)
+    model.load_state_dict(torch.load('./model_wgs'))
+    a=0
+    b=0
+    c=0
+    d=0
+    ans=[]
+    for ite in range(20):
+        #print(ite)
+        test_data = datasets.ImageFolder(root=image_path,
+                                                   transform=data_transform)
+        test_loader = torch.utils.data.DataLoader(test_data,
+                                                     batch_size=32, shuffle=True,
+                                                     num_workers=4)
+        model.eval()  # eval mode (batchnorm uses moving mean/variance instead of mini-batch mean/variance)
+        with torch.no_grad():
+            correct = 0
+            total = 0
+            for images, labels in test_loader:
+                images = images.to(device)
+                labels = labels.to(device)
+                outputs = model(images)
+                _, predicted = torch.max(outputs.data, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+                #print(predicted)
+                ans.append(predicted[0].item())
+    cl= max(ans,key=ans.count)
+    return monuments[cl]
+
+

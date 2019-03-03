@@ -47,3 +47,9 @@ class predicted_features(models.Model):
     credit          =       models.IntegerField(default=0)
     debit           =       models.IntegerField(default=0)
     fraud           =       models.BooleanField(default=0)
+
+class report(models.Model):
+    aadhar_no        =       models.IntegerField(default=0,unique=False)
+    reason           =       models.TextField(default='a')
+    image            =       models.ImageField(upload_to='holidays/', default='default.jpg')
+    amount           =       models.IntegerField(default=0,blank=True,null=True)

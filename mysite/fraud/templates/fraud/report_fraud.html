@@ -1,0 +1,10 @@
+  <div class="enter_image">
+    <h1 id="detailhead">Enter details and trust us you are completely anonymous:</h1>
+    <form style="color:black" class="enter_holiday_form" action="{% url 'fraud:report_fraud' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+       Enter aadhar card:<br> {{ form.aadhar_no }}<br><br><br>
+       Upload Image:<br>  {{form.image}}<br><br><br><br>
+       Enter reason: {{form.reason}}<br><br><br>
+        <input type="submit" value="Enter details">
+    </form>
+</div>
