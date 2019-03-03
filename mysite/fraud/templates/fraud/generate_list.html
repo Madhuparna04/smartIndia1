@@ -1,0 +1,7 @@
+{% for predictions in predict %}
+
+<li>
+ <a href="/fraud/{{predictions.aadhar_no}}">  {{predictions.aadhar_no}} </a>
+   {{predictions.fraud}}
+</li>
+   {% endfor %} 
