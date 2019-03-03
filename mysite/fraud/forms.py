@@ -14,4 +14,4 @@ class Authentic(forms.ModelForm):
 class Reporting(forms.ModelForm):
     class Meta:
         model = report
-        fields = '__all__'
+        fields = "__all__"

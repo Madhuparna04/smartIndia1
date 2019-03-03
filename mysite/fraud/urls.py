@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^new_case/', views.new_case, name='new_case'),
     url(r'^(?P<aadharno>[0-9]+)/', views.generate_report, name='generate_report'),
     url(r'^report_fraud/', views.report_fraud, name='report_fraud'),
-    url(r'^lets_see/', views.lets_see, name='report_fraud'),
+    url(r'^lets_see/', views.lets_see, name='lets_see'),
 
 
 

@@ -216,6 +216,9 @@ def report_fraud(request):
         
         if form.is_valid():
             form.save()
+            return lets_see(request)
+        else:
+            print("not working")
     return render(request,"fraud/report_fraud.html",{"form":form})
 
 
@@ -226,15 +229,31 @@ def lets_see(request):
     print(path)
     # copyfile(form.image, os.path.join(path, os.path.basename(form.image)))
     print(os.path.join(os.getcwd(), 'media'))
-    monument = GetPlace('../media/holidays')
-    # os.remove( os.path.join(path, os.path.basename(form.image)))
-    # print(monument)
+    
+    
+    i=0
 
+    for reports in report.objects.all():
+        if i==11:
+             break
+        monument = GetPlace('./media/',i)
+        i=i+1
+        reports.amount = monument[1]
+        print(reports.amount)
+        print(monument[1])
+
+        reports.save()
+        print(reports.amount)
+    # os.remove( os.path.join(path, os.path.basename(form.image)))
+    print(monument)
+
+    return render(request,"fraud/thanksReporting.html")
 
 # code begins
-def GetPlace(image_path):
+def GetPlace(image_path,ind):
     
-    monuments = {0:'Burkingham Palace', 1:'Burj Khalifa',2:'Disney World',3:'Eiffel Tower',4:'Golden Gate Bridge',5:'Great Wall of China',6:'Pyramids',7:'Statue of Liberty',8:'Sydney Opera House',9:'Taj Mahal'}
+    monuments = ['Burkingham Palace','Burj Khalifa','Disney World','Eiffel Tower','Golden Gate Bridge','Great Wall of China','Pyramids','Statue of Liberty','Sydney Opera House','Taj Mahal']
+    cost = [150000, 40000, 30000, 150000, 200000, 30000, 50000, 200000, 150000, 20000]
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     data_transform = transforms.Compose([
             transforms.RandomSizedCrop(64),
@@ -268,10 +287,6 @@ def GetPlace(image_path):
             return out
     model = ConvNet(10)
     model.load_state_dict(torch.load('./model_wgs'))
-    a=0
-    b=0
-    c=0
-    d=0
     ans=[]
     for ite in range(20):
         #print(ite)
@@ -292,8 +307,8 @@ def GetPlace(image_path):
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
                 #print(predicted)
-                ans.append(predicted[0].item())
+                ans.append(predicted[ind].item())
     cl= max(ans,key=ans.count)
-    return monuments[cl]
+    return [monuments[cl],(cost[cl])]
 
 
