@@ -6,10 +6,10 @@
 git clone https://github.com/mananpoddar/smartIndia1
 cd smartIndia1/mysite
 ```
-- Create a virtualenv
+- Create a virtualenv with anaconda
 ```
-virtualenv -p python3 venv
-source venv/bin/activate
+conda create -n yourvenvname
+conda activate yourvenvname
 ```
 
 - Install the requirements
