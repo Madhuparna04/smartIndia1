@@ -11,4 +11,3 @@ urlpatterns = [
     url(r'^fraud/', include("fraud.urls" , namespace="fraud")),#managefraudroute
 ]
 
-    

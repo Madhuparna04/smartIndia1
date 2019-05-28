@@ -1,104 +1,34 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
 
-<h1 style=" text-align: center"><strong style="color:aliceblue">open new case!</strong> </h1><br>
-<form class="form-horizontal" action="{% url "fraud:new_case" %}" method="POST">
-    {% csrf_token %}
-    
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="username"><strong>aadhar number:</strong></label>
-        <br><br>
-        <div class="col-sm-10">
-     <input type="text" class="form-control" name="aadharno" placeholder="Enter aadhar card number" >
-        </div>
-    </div>
+{% block one %}
+<br>
 
-    
-    <div class="form-group">
-        <label class="control-label col-sm-2" for="username"><strong>Lower Education:</strong></label>
-        <br><br>
-        <div class="col-sm-10">
-     <input type="text" class="form-control" name="lEdu" placeholder="Enter amount for lower education" >
-        </div>
-    </div>
-  
-    <div class="form-group">
-       <label class="control-label col-sm-2"  for="password"><strong>Higher Education:</strong></label>
-       <br><br>
-     <div class="col-sm-10">
-       <input class="form-control" type="text" name="hEdu" placeholder="Enter amount for higher education">
-   </div>
-    </div>
-
-    <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>area:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" list ="hosting-plan" type="text" name="area" placeholder="area">
-    </div>
-     </div>
-     
+<div id="contact">
+    <div class="w3-modal-content w3-animate-zoom">
+      <div class="w3-container w3-black">
+          <h1>Generate New Case</h1>
+      </div>
+      <div class="w3-container">
+      <form class="form-horizontal" action="{% url "fraud:new_case" %}" method="POST">
+      {% csrf_token %}
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Enter Aadhar Number"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Amount spent on lower education"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Amount spent on lower education"></p>
+      <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Cost of living according to locality"></p> 
      <datalist id="hosting-plan">
         <option value="slums">slums</option>
         <option value="middle">middle</option>
         <option value="posh">posh</option>
     </datalist>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>Amount for jewellery:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="jewellery" placeholder="Enter amount">
-    </div>
-     </div>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>no of cars:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="cars" placeholder="Enter no of cars">
-    </div>
-     </div>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>no of bikes:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="bikes" placeholder="Enter no of bikes">
-    </div>
-     </div>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>TAX:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="tax" placeholder="Enter tax">
-    </div>
-     </div>
-     <!-- ,jewellery,car,bike,tax,misc_credit,misc_debit -->
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>Enter miscellaneous credit:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="credit" placeholder="Enter miscellaneous credit">
-    </div>
-     </div>
-
-     <div class="form-group">
-        <label class="control-label col-sm-2"  for="password"><strong>Enter miscellaneous debit:</strong></label>
-        <br><br>
-      <div class="col-sm-10">
-        <input class="form-control" type="text" name="debit" placeholder="Enter miscellaneous debit">
-    </div>
-     </div>
-
-
-     <div class="form-group">       
-        <div class="col-sm-offset-2 col-sm-10">
-     <input type="submit" name=""   class="btn btn-default" value="submit">
-        </div>
-     </div>
-    </div>
-    </form>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Amount spent on jewelery"></p>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Number of cars"></p>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Number of bikes"></p>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Enter tax paid"></p>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Enter miscellaneous credit details"></p>
+    <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Enter miscellaneous debit details"></p>
+    <p><button class="w3-button" style="border:black 1px solid;" type="submit">Submit Details</button></p>    </form>
       </div>
         </div>
         </div>
+{% endblock %}
